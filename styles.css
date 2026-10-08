@@ -1,0 +1,259 @@
+/* ==========================================================================
+   ipcalc - styles complémentaires au DSFR (jetons de couleur DSFR uniquement,
+   pour suivre automatiquement les thèmes clair et sombre)
+   ========================================================================== */
+
+body {
+    background-color: var(--background-alt-grey);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex-grow: 1;
+}
+
+/* Certains composants DSFR (.fr-error-text…) imposent un display qui écrase l'attribut hidden */
+[hidden] {
+    display: none !important;
+}
+
+/* Icônes utilisées hors du cœur DSFR (sous-ensemble de utility/icons) */
+.fr-icon-arrow-left-line::before, .fr-icon-arrow-left-line::after {
+    -webkit-mask-image: url(dsfr/icons/arrows/arrow-left-line.svg);
+    mask-image: url(dsfr/icons/arrows/arrow-left-line.svg);
+}
+.fr-icon-arrow-right-line::before, .fr-icon-arrow-right-line::after {
+    -webkit-mask-image: url(dsfr/icons/arrows/arrow-right-line.svg);
+    mask-image: url(dsfr/icons/arrows/arrow-right-line.svg);
+}
+.fr-icon-clipboard-line::before, .fr-icon-clipboard-line::after {
+    -webkit-mask-image: url(dsfr/icons/document/clipboard-line.svg);
+    mask-image: url(dsfr/icons/document/clipboard-line.svg);
+}
+.fr-icon-refresh-line::before, .fr-icon-refresh-line::after {
+    -webkit-mask-image: url(dsfr/icons/system/refresh-line.svg);
+    mask-image: url(dsfr/icons/system/refresh-line.svg);
+}
+.fr-icon-check-line::before, .fr-icon-check-line::after {
+    -webkit-mask-image: url(dsfr/icons/system/check-line.svg);
+    mask-image: url(dsfr/icons/system/check-line.svg);
+}
+.fr-icon-download-line::before, .fr-icon-download-line::after {
+    -webkit-mask-image: url(dsfr/icons/system/download-line.svg);
+    mask-image: url(dsfr/icons/system/download-line.svg);
+}
+.fr-icon-theme-fill::before, .fr-icon-theme-fill::after {
+    -webkit-mask-image: url(dsfr/icons/system/fr--theme-fill.svg);
+    mask-image: url(dsfr/icons/system/fr--theme-fill.svg);
+}
+
+/* Cartes */
+.ipc-card {
+    background-color: var(--background-default-grey);
+    border: 1px solid var(--border-default-grey);
+    border-radius: 4px;
+    padding: 1.5rem;
+}
+
+.ipc-mono,
+.ipc-table td,
+.ipc-bin {
+    font-family: ui-monospace, "SFMono-Regular", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+.ipc-section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.ipc-move {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Tableau de résultat (disposition de la sortie d'ipcalc) */
+.ipc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+}
+
+.ipc-table caption {
+    text-align: left;
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+}
+
+.ipc-table th,
+.ipc-table td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.375rem 1rem 0.375rem 0;
+    border-bottom: 1px solid var(--border-default-grey);
+}
+
+.ipc-table thead th {
+    font-size: 0.8125rem;
+    color: var(--text-mention-grey);
+    font-weight: 500;
+}
+
+.ipc-table tbody th {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ipc-table tr.ipc-arrow th,
+.ipc-table tr.ipc-arrow td {
+    border-bottom: 2px solid var(--border-plain-blue-france);
+    padding: 0;
+}
+
+.ipc-value {
+    white-space: nowrap;
+    font-weight: 700;
+    color: var(--text-title-grey);
+}
+
+.ipc-table td.ipc-note {
+    color: var(--text-mention-grey);
+    font-family: inherit;
+}
+
+.ipc-badge {
+    margin-right: 0.25rem;
+}
+
+/* Bits colorés : la couleur double l'espace de frontière, jamais seule porteuse de sens */
+.ipc-bin {
+    white-space: pre;
+    letter-spacing: 0.02em;
+}
+
+.ipc-bit--class {
+    color: var(--text-label-red-marianne);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.ipc-bit--net {
+    color: var(--text-action-high-blue-france);
+}
+
+.ipc-bit--host {
+    color: var(--text-label-green-emeraude);
+}
+
+.ipc-legend span {
+    font-family: ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace;
+    margin-right: 1rem;
+}
+
+.ipc-nobin .ipc-bin,
+.ipc-nobin .ipc-col-bin,
+.ipc-nobin .ipc-legend {
+    display: none;
+}
+
+/* Liste des sous-réseaux */
+.ipc-scroll {
+    overflow-x: auto;
+}
+
+.ipc-scroll:focus-visible {
+    outline: 2px solid var(--border-active-blue-france);
+    outline-offset: 2px;
+}
+
+.ipc-sub .ipc-bin {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+
+.ipc-num {
+    color: var(--text-mention-grey);
+}
+
+#actions {
+    margin-bottom: 2rem;
+}
+
+/* Mobile : chaque ligne devient un bloc libellé / valeur / binaire */
+@media (max-width: 47.99em) {
+    .ipc-card {
+        padding: 1rem;
+    }
+
+    .ipc-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+
+    .ipc-table tr {
+        display: block;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border-default-grey);
+    }
+
+    .ipc-table th,
+    .ipc-table td {
+        display: block;
+        border: 0;
+        padding: 0.0625rem 0;
+    }
+
+    .ipc-table td[data-label]::before {
+        content: attr(data-label) " : ";
+        font-family: Marianne, arial, sans-serif;
+        color: var(--text-mention-grey);
+        font-size: 0.8125rem;
+        font-weight: 400;
+    }
+
+    .ipc-table td.ipc-bin::before,
+    .ipc-table td.ipc-col-bin::before,
+    .ipc-table td.ipc-value::before {
+        content: none;
+    }
+
+    .ipc-table td:empty {
+        display: none;
+    }
+
+    .ipc-table tr.ipc-arrow {
+        padding: 0;
+        border-bottom: 2px solid var(--border-plain-blue-france);
+    }
+
+    .ipc-bin {
+        font-size: 0.8125rem;
+        letter-spacing: 0;
+    }
+
+    .ipc-value {
+        white-space: normal;
+    }
+}
+
+@media print {
+    .fr-header, .fr-footer, #formulaire, .ipc-move, #actions, .fr-skiplinks {
+        display: none !important;
+    }
+    .ipc-card {
+        border: 0;
+        padding: 0;
+    }
+}

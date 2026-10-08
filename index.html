@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr" data-fr-scheme="system">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ipcalc - Calculateur de réseaux IPv4</title>
+    <meta name="description" content="Calculateur de réseaux IPv4 hors ligne : masque, wildcard, réseau, broadcast, plage d'hôtes, sous-réseaux et sur-réseau.">
+    <meta name="theme-color" content="#000091">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="dsfr/dsfr.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="fr-skiplinks">
+        <nav class="fr-container" role="navigation" aria-label="Accès rapide">
+            <ul class="fr-skiplinks__list">
+                <li><a class="fr-link" href="#contenu">Contenu</a></li>
+                <li><a class="fr-link" href="#formulaire">Formulaire de calcul</a></li>
+                <li><a class="fr-link" href="#pied-de-page">Pied de page</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <header role="banner" class="fr-header">
+        <div class="fr-header__body">
+            <div class="fr-container">
+                <div class="fr-header__body-row">
+                    <div class="fr-header__brand fr-enlarge-link">
+                        <div class="fr-header__brand-top">
+                            <div class="fr-header__logo">
+                                <p class="fr-logo">République<br>Française</p>
+                            </div>
+                            <div class="fr-header__navbar">
+                                <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="modal-menu" aria-haspopup="menu" id="button-menu" title="Menu">Menu</button>
+                            </div>
+                        </div>
+                        <div class="fr-header__service">
+                            <a href="./" title="Accueil - ipcalc">
+                                <p class="fr-header__service-title">ipcalc</p>
+                            </a>
+                            <p class="fr-header__service-tagline">Calculateur de réseaux IPv4</p>
+                        </div>
+                    </div>
+                    <div class="fr-header__tools">
+                        <div class="fr-header__tools-links">
+                            <ul class="fr-btns-group">
+                                <li>
+                                    <button class="fr-btn fr-icon-download-line ipc-install" type="button" hidden>Installer l'application</button>
+                                </li>
+                                <li>
+                                    <button class="fr-btn fr-icon-theme-fill" aria-controls="fr-theme-modal" data-fr-opened="false" type="button">Paramètres d'affichage</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fr-header__menu fr-modal" id="modal-menu" aria-labelledby="button-menu">
+            <div class="fr-container">
+                <button class="fr-btn--close fr-btn" aria-controls="modal-menu" title="Fermer" type="button">Fermer</button>
+                <div class="fr-header__menu-links"></div>
+            </div>
+        </div>
+    </header>
+
+    <main id="contenu" role="main" class="fr-pb-8w">
+        <div class="fr-container">
+            <h1 class="fr-h2 fr-mt-5w fr-mb-1w">Calculateur IPv4</h1>
+            <p class="fr-text--lead fr-mb-4w">Saisissez une adresse et un masque : ipcalc calcule le réseau, le broadcast, la plage d'hôtes et la représentation binaire. Un second masque permet de découper le réseau en sous-réseaux ou de trouver son sur-réseau.</p>
+
+            <form id="formulaire" class="ipc-card fr-mb-4w" novalidate autocomplete="off">
+                <div class="fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-12 fr-col-md-5">
+                        <div class="fr-input-group" id="group-host">
+                            <label class="fr-label" for="host">Adresse (hôte ou réseau)
+                                <span class="fr-hint-text">Ex. 192.168.0.1 ou 192.168.0.1/24</span>
+                            </label>
+                            <input class="fr-input ipc-mono" type="text" id="host" name="host" inputmode="decimal" spellcheck="false" placeholder="192.168.0.1" aria-describedby="host-error">
+                            <p class="fr-error-text" id="host-error" hidden></p>
+                        </div>
+                    </div>
+                    <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
+                        <div class="fr-input-group" id="group-mask1">
+                            <label class="fr-label" for="mask1">Masque
+                                <span class="fr-hint-text">Ex. 24, 255.255.255.0 ou 0.0.0.255</span>
+                            </label>
+                            <input class="fr-input ipc-mono" type="text" id="mask1" name="mask1" list="masques" inputmode="decimal" spellcheck="false" placeholder="24" aria-describedby="mask1-error">
+                            <p class="fr-error-text" id="mask1-error" hidden></p>
+                        </div>
+                    </div>
+                    <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
+                        <div class="fr-input-group" id="group-mask2">
+                            <label class="fr-label" for="mask2">Masque de sous-réseau ou sur-réseau
+                                <span class="fr-hint-text">Facultatif. Plus long : sous-réseaux. Plus court : sur-réseau.</span>
+                            </label>
+                            <input class="fr-input ipc-mono" type="text" id="mask2" name="mask2" list="masques" inputmode="decimal" spellcheck="false" placeholder="26" aria-describedby="mask2-error">
+                            <p class="fr-error-text" id="mask2-error" hidden></p>
+                        </div>
+                    </div>
+                </div>
+                <datalist id="masques"></datalist>
+
+                <ul class="fr-btns-group fr-btns-group--inline-sm fr-btns-group--icon-left fr-mt-2w">
+                    <li><button class="fr-btn fr-icon-check-line" type="submit">Calculer</button></li>
+                    <li><button class="fr-btn fr-btn--secondary fr-icon-refresh-line" type="button" id="btn-reset">Réinitialiser</button></li>
+                </ul>
+
+                <div class="fr-toggle fr-mt-1w">
+                    <input type="checkbox" class="fr-toggle__input" id="toggle-bin" checked>
+                    <label class="fr-toggle__label" for="toggle-bin" data-fr-checked-label="Affiché" data-fr-unchecked-label="Masqué">Représentation binaire</label>
+                </div>
+            </form>
+
+            <p id="status" class="fr-sr-only" aria-live="polite"></p>
+            <div id="notices"></div>
+
+            <section id="resultat" class="ipc-card fr-mb-4w" aria-labelledby="titre-resultat" hidden>
+                <div class="ipc-section-head">
+                    <h2 id="titre-resultat" class="fr-h4 fr-mb-0">Résultat</h2>
+                    <div class="ipc-move" role="group" aria-label="Se déplacer vers">
+                        <span class="fr-text--sm fr-mb-0">Se déplacer vers :</span>
+                        <button class="fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line" type="button" id="btn-prev">Réseau précédent</button>
+                        <button class="fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-right fr-icon-arrow-right-line" type="button" id="btn-next">Réseau suivant</button>
+                    </div>
+                </div>
+                <div id="bloc-principal"></div>
+                <p class="ipc-legend fr-text--xs fr-mt-2w fr-mb-0" aria-hidden="true">
+                    <span class="ipc-bit--class">bits de classe</span>
+                    <span class="ipc-bit--net">partie réseau</span>
+                    <span class="ipc-bit--host">partie hôte</span>
+                    (l'espace marque la frontière du masque)
+                </p>
+            </section>
+
+            <section id="sous-reseaux" class="ipc-card fr-mb-4w" aria-labelledby="titre-sous-reseaux" hidden>
+                <h2 id="titre-sous-reseaux" class="fr-h4">Sous-réseaux</h2>
+                <div id="bloc-sous-masque"></div>
+                <div id="bloc-sous-reseaux"></div>
+                <p id="sous-resume" class="fr-text--bold fr-mt-2w fr-mb-0"></p>
+            </section>
+
+            <section id="sur-reseau" class="ipc-card fr-mb-4w" aria-labelledby="titre-sur-reseau" hidden>
+                <h2 id="titre-sur-reseau" class="fr-h4">Sur-réseau</h2>
+                <div id="bloc-sur-reseau"></div>
+            </section>
+
+            <div id="actions" hidden>
+                <button class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-clipboard-line" type="button" id="btn-copy">Copier le résultat (texte)</button>
+                <span id="copy-status" class="fr-text--sm fr-ml-2w" aria-live="polite"></span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="fr-footer" role="contentinfo" id="pied-de-page">
+        <div class="fr-container">
+            <div class="fr-footer__body">
+                <div class="fr-footer__brand fr-enlarge-link">
+                    <a href="./" title="Retour à l'accueil - ipcalc">
+                        <p class="fr-logo">République<br>Française</p>
+                    </a>
+                </div>
+                <div class="fr-footer__content">
+                    <p class="fr-footer__content-desc">ipcalc fonctionne entièrement dans le navigateur, sans connexion : aucune donnée saisie ne quitte l'appareil. Il reprend les fonctionnalités du calculateur <a href="https://jodies.de/ipcalc" target="_blank" rel="noopener" title="ipcalc de Krischan Jodies - nouvelle fenêtre">ipcalc de Krischan Jodies</a>.</p>
+                    <ul class="fr-footer__content-list">
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" href="https://github.com/guiraudjb/ipcalc" target="_blank" rel="noopener" title="Code source - nouvelle fenêtre">Code source</a>
+                        </li>
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" href="https://www.systeme-de-design.gouv.fr/" target="_blank" rel="noopener" title="Système de design de l'État - nouvelle fenêtre">Système de design de l'État</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="fr-footer__bottom">
+                <ul class="fr-footer__bottom-list">
+                    <li class="fr-footer__bottom-item">
+                        <button class="fr-footer__bottom-link fr-icon-theme-fill fr-btn--icon-left" aria-controls="fr-theme-modal" data-fr-opened="false" type="button">Paramètres d'affichage</button>
+                    </li>
+                </ul>
+                <div class="fr-footer__bottom-copy">
+                    <p>Sauf mention contraire, tous les contenus de ce site sont sous <a href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank" rel="noopener" title="Licence etalab 2.0 - nouvelle fenêtre">licence etalab-2.0</a>. <span id="version"></span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <dialog id="fr-theme-modal" class="fr-modal" aria-labelledby="fr-theme-modal-title">
+        <div class="fr-container fr-container--fluid fr-container-md">
+            <div class="fr-grid-row fr-grid-row--center">
+                <div class="fr-col-12 fr-col-md-6 fr-col-lg-4">
+                    <div class="fr-modal__body">
+                        <div class="fr-modal__header">
+                            <button class="fr-btn--close fr-btn" aria-controls="fr-theme-modal" title="Fermer" type="button">Fermer</button>
+                        </div>
+                        <div class="fr-modal__content">
+                            <h2 id="fr-theme-modal-title" class="fr-modal__title">Paramètres d'affichage</h2>
+                            <div id="fr-display" class="fr-form-group fr-display">
+                                <fieldset class="fr-fieldset">
+                                    <legend class="fr-fieldset__legend--regular fr-fieldset__legend">Choisissez un thème pour personnaliser l'apparence du site.</legend>
+                                    <div class="fr-fieldset__element">
+                                        <div class="fr-radio-group fr-radio-rich">
+                                            <input value="light" type="radio" id="fr-radios-theme-light" name="fr-radios-theme">
+                                            <label class="fr-label" for="fr-radios-theme-light">Thème clair</label>
+                                            <div class="fr-radio-rich__img">
+                                                <svg aria-hidden="true" class="fr-artwork" width="80" height="80" viewBox="0 0 80 80">
+                                                    <use class="fr-artwork-decorative" href="dsfr/artwork/pictograms/environment/sun.svg#artwork-decorative"></use>
+                                                    <use class="fr-artwork-minor" href="dsfr/artwork/pictograms/environment/sun.svg#artwork-minor"></use>
+                                                    <use class="fr-artwork-major" href="dsfr/artwork/pictograms/environment/sun.svg#artwork-major"></use>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fr-fieldset__element">
+                                        <div class="fr-radio-group fr-radio-rich">
+                                            <input value="dark" type="radio" id="fr-radios-theme-dark" name="fr-radios-theme">
+                                            <label class="fr-label" for="fr-radios-theme-dark">Thème sombre</label>
+                                            <div class="fr-radio-rich__img">
+                                                <svg aria-hidden="true" class="fr-artwork" width="80" height="80" viewBox="0 0 80 80">
+                                                    <use class="fr-artwork-decorative" href="dsfr/artwork/pictograms/environment/moon.svg#artwork-decorative"></use>
+                                                    <use class="fr-artwork-minor" href="dsfr/artwork/pictograms/environment/moon.svg#artwork-minor"></use>
+                                                    <use class="fr-artwork-major" href="dsfr/artwork/pictograms/environment/moon.svg#artwork-major"></use>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fr-fieldset__element">
+                                        <div class="fr-radio-group fr-radio-rich">
+                                            <input value="system" type="radio" id="fr-radios-theme-system" name="fr-radios-theme">
+                                            <label class="fr-label" for="fr-radios-theme-system">Système
+                                                <span class="fr-hint-text">Utilise les paramètres système</span>
+                                            </label>
+                                            <div class="fr-radio-rich__img">
+                                                <svg aria-hidden="true" class="fr-artwork" width="80" height="80" viewBox="0 0 80 80">
+                                                    <use class="fr-artwork-decorative" href="dsfr/artwork/pictograms/system/system.svg#artwork-decorative"></use>
+                                                    <use class="fr-artwork-minor" href="dsfr/artwork/pictograms/system/system.svg#artwork-minor"></use>
+                                                    <use class="fr-artwork-major" href="dsfr/artwork/pictograms/system/system.svg#artwork-major"></use>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <script type="module" src="dsfr/dsfr.module.min.js"></script>
+    <script nomodule src="dsfr/dsfr.nomodule.min.js"></script>
+    <script src="ipcalc.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
